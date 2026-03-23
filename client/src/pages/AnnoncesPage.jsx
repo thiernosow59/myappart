@@ -124,6 +124,10 @@ export default function AnnoncesPage() {
             </select>
           </div>
           <div>
+            <label className="text-xs font-semibold text-slate-500 mb-1 block">Quartier</label>
+            <input type="text" className="input-field" placeholder="ex: Kipé, Taouyah..." value={filters.quartier} onChange={e => setFilter('quartier', e.target.value)} />
+          </div>
+          <div>
             <label className="text-xs font-semibold text-slate-500 mb-1 block">Chambres (min)</label>
             <select className="input-field" value={filters.nb_chambres} onChange={e => setFilter('nb_chambres', e.target.value)}>
               <option value="">Toutes</option>
@@ -143,7 +147,7 @@ export default function AnnoncesPage() {
             <input type="number" className="input-field" placeholder="ex: 80" value={filters.surface_min} onChange={e => setFilter('surface_min', e.target.value)} />
           </div>
           <div className="flex items-end">
-            <button onClick={() => { setFilters({ type:'', bien:'', commune:'', q:'', prix_min:'', prix_max:'', surface_min:'', nb_chambres:'' }); setPage(1) }}
+            <button onClick={() => { setFilters({ type:'', bien:'', commune:'', quartier:'', q:'', prix_min:'', prix_max:'', surface_min:'', nb_chambres:'' }); setPage(1) }}
               className="flex items-center gap-1.5 text-sm text-red-500 hover:text-red-700">
               <X size={14} /> Réinitialiser
             </button>
