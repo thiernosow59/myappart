@@ -6,8 +6,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <img src="/logo/MyAppart.png" alt="MyAppart" className="h-8 brightness-0 invert" />
-            <span className="text-white font-bold text-base">My Appart</span>
+            <span className="text-white font-bold text-lg tracking-tight">My Appart</span>
           </div>
           <p className="text-xs leading-relaxed">N°1 de l'immobilier en Guinée. Achat, vente, location.</p>
         </div>
