@@ -6,6 +6,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
         <div>
           <div className="flex items-center gap-2 mb-3">
+            <img src="/logo/MyAppart.png" alt="MyAppart" className="h-8" style={{ mixBlendMode: 'screen' }} />
             <span className="text-white font-bold text-lg tracking-tight">My Appart</span>
           </div>
           <p className="text-xs leading-relaxed">N°1 de l'immobilier en Guinée. Achat, vente, location.</p>
@@ -15,7 +16,7 @@ export default function Footer() {
           <ul className="space-y-2 text-sm">
             <li><Link to="/annonces?type=vente"    className="hover:text-white transition-colors">Acheter</Link></li>
             <li><Link to="/annonces?type=location" className="hover:text-white transition-colors">Louer</Link></li>
-            <li><Link to="/annonces?bien=terrain"  className="hover:text-white transition-colors">Terrains</Link></li>
+            <li><Link to="/publier"  className="hover:text-white transition-colors">Vendre</Link></li>
           </ul>
         </div>
         <div>
