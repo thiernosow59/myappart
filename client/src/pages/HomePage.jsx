@@ -8,7 +8,7 @@ const QUICK_FILTERS = [
   { label: 'Tous',          params: {} },
   { label: '🏘️ Maisons',     params: { bien: 'maison' } },
   { label: '🏢 Appartements',params: { bien: 'appartement' } },
-  { label: '🌿 Terrains',    params: { bien: 'terrain' } },
+  { label: '🏷️ Vendre',      params: { type: 'vente' } },
   { label: '📍 Kaloum',      params: { commune: 'Kaloum' } },
   { label: '📍 Ratoma',      params: { commune: 'Ratoma' } },
   { label: '📍 Matam',       params: { commune: 'Matam' } },

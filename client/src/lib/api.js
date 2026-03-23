@@ -37,6 +37,30 @@ export const messagesApi = {
     req('/messages', { method: 'POST', body: JSON.stringify({ action: 'send_message', ...body }), headers: { Authorization: `Bearer ${token}` } }),
 }
 
+/* ── Upload photos ── */
+export const uploadApi = {
+  uploadPhoto: async (annonce_id, file, photo_type = 'galerie', token) => {
+    const base64 = await new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(reader.result.split(',')[1])
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+    return req('/upload', {
+      method: 'POST',
+      body: JSON.stringify({
+        annonce_id,
+        filename: file.name,
+        content_type: file.type,
+        size: file.size,
+        data: base64,
+        photo_type,
+      }),
+      headers: { Authorization: `Bearer ${token}` },
+    })
+  },
+}
+
 /* ── Favoris ── */
 export const favorisApi = {
   list:   (token) => req('/favoris', { headers: { Authorization: `Bearer ${token}` } }),

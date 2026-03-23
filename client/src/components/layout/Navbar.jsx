@@ -23,6 +23,7 @@ export default function Navbar() {
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5">
           <img src="/logo/MyAppart.png" alt="MyAppart" className="h-9" />
+          <span className="text-lg font-bold text-navy-900 hidden sm:block">My Appart</span>
         </Link>
 
         {/* Nav links — desktop */}

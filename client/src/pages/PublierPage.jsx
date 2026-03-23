@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { annoncesApi } from '../lib/api'
+import { annoncesApi, uploadApi } from '../lib/api'
+import { ImagePlus, X as XIcon } from 'lucide-react'
 
 const EQUIPEMENTS = [
   { key: 'eau_courante', label: 'Eau courante' },
@@ -24,9 +25,10 @@ export default function PublierPage() {
 
   const canPublish = profile?.role === 'proprietaire' || profile?.role === 'agence'
 
-  const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+  const [loading, setLoading]   = useState(false)
+  const [error, setError]       = useState('')
+  const [photos, setPhotos]     = useState([]) // { file, preview, type }
+  const [uploading, setUploading] = useState(false)
 
   const [form, setForm] = useState({
     type_bien: 'maison', transaction: 'vente',
@@ -58,7 +60,7 @@ export default function PublierPage() {
     try {
       const token = await getToken()
       const equips = form.equipements.filter(e => e !== 'autres')
-      await annoncesApi.create({
+      const annonce = await annoncesApi.create({
         ...form,
         prix: parseInt(form.prix),
         surface_m2: form.surface_m2 ? parseInt(form.surface_m2) : null,
@@ -70,6 +72,17 @@ export default function PublierPage() {
         nb_etages_total: form.nb_etages_total ? parseInt(form.nb_etages_total) : null,
         equipements: equips,
       }, token)
+
+      // Upload des photos
+      if (photos.length > 0) {
+        setUploading(true)
+        for (let i = 0; i < photos.length; i++) {
+          const p = photos[i]
+          await uploadApi.uploadPhoto(annonce.id, p.file, i === 0 ? 'principale' : 'galerie', token)
+        }
+        setUploading(false)
+      }
+
       navigate('/mes-annonces')
     } catch (err) {
       setError(err.message)
@@ -252,8 +265,40 @@ export default function PublierPage() {
           )}
         </div>
 
-        <button type="submit" disabled={loading} className="btn-orange w-full py-4 text-base">
-          {loading ? 'Publication en cours...' : '📤 Publier l\'annonce'}
+        {/* Photos */}
+        <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+          <h2 className="font-bold text-slate-700">Photos <span className="text-xs font-normal text-slate-400">(max 5 Mo par photo, jpeg/png/webp)</span></h2>
+          <div className="flex flex-wrap gap-3">
+            {photos.map((p, i) => (
+              <div key={i} className="relative w-24 h-24">
+                <img src={p.preview} alt="" className="w-24 h-24 object-cover rounded-xl border-2 border-slate-200" />
+                {i === 0 && <span className="absolute bottom-1 left-1 bg-navy-900 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">PRINCIPALE</span>}
+                <button type="button" onClick={() => setPhotos(ps => ps.filter((_, j) => j !== i))}
+                  className="absolute -top-1.5 -right-1.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center">
+                  <XIcon size={10} className="text-white" />
+                </button>
+              </div>
+            ))}
+            {photos.length < 10 && (
+              <label className="w-24 h-24 border-2 border-dashed border-slate-300 rounded-xl flex flex-col items-center justify-center cursor-pointer hover:border-navy-900 transition-colors">
+                <ImagePlus size={20} className="text-slate-400" />
+                <span className="text-xs text-slate-400 mt-1">Ajouter</span>
+                <input type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden"
+                  onChange={e => {
+                    const files = Array.from(e.target.files || [])
+                    const newPhotos = files.map(f => ({ file: f, preview: URL.createObjectURL(f) }))
+                    setPhotos(ps => [...ps, ...newPhotos].slice(0, 10))
+                    e.target.value = ''
+                  }}
+                />
+              </label>
+            )}
+          </div>
+          {photos.length === 0 && <p className="text-xs text-slate-400">La première photo sera la photo principale.</p>}
+        </div>
+
+        <button type="submit" disabled={loading || uploading} className="btn-orange w-full py-4 text-base">
+          {uploading ? '📷 Upload photos...' : loading ? 'Publication en cours...' : '📤 Publier l\'annonce'}
         </button>
       </form>
     </div>
