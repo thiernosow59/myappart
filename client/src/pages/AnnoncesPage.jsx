@@ -20,10 +20,11 @@ export default function AnnoncesPage() {
 
   // Filtres
   const [filters, setFilters] = useState({
-    type:    searchParams.get('type')    || '',
-    bien:    searchParams.get('bien')    || '',
-    commune: searchParams.get('commune') || '',
-    q:       searchParams.get('q')       || '',
+    type:     searchParams.get('type')     || '',
+    bien:     searchParams.get('bien')     || '',
+    commune:  searchParams.get('commune')  || '',
+    quartier: searchParams.get('quartier') || '',
+    q:        searchParams.get('q')        || '',
     prix_min: '', prix_max: '',
     surface_min: '',
     nb_chambres: '',
@@ -38,7 +39,8 @@ export default function AnnoncesPage() {
       const params = { limit: 12, offset: (page - 1) * 12 }
       if (filters.type)       params.type = filters.type
       if (filters.bien)       params.bien = filters.bien
-      if (filters.commune)    params.commune = filters.commune
+      if (filters.commune)    params.commune  = filters.commune
+      if (filters.quartier)   params.quartier = filters.quartier
       if (filters.q)          params.q = filters.q
       if (filters.prix_min)   params.prix_min = filters.prix_min
       if (filters.prix_max)   params.prix_max = filters.prix_max

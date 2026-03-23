@@ -23,9 +23,10 @@ export default function HomePage() {
   const [stats, setStats]             = useState({ annonces: 0, proprietaires: 0, agences: 0 })
 
   // Search state
-  const [searchType, setSearchType]  = useState('vente')
-  const [searchBien, setSearchBien]  = useState('')
-  const [searchQuery, setSearchQuery] = useState('')
+  const [searchType, setSearchType]      = useState('vente')
+  const [searchBien, setSearchBien]      = useState('')
+  const [searchQuery, setSearchQuery]    = useState('')
+  const [searchQuartier, setSearchQuartier] = useState('')
 
   useEffect(() => {
     loadAnnonces(QUICK_FILTERS[activeFilter].params)
@@ -50,9 +51,10 @@ export default function HomePage() {
   function handleSearch(e) {
     e.preventDefault()
     const params = new URLSearchParams()
-    if (searchType)  params.set('type', searchType)
-    if (searchBien)  params.set('bien', searchBien)
-    if (searchQuery) params.set('q', searchQuery)
+    if (searchType)     params.set('type', searchType)
+    if (searchBien)     params.set('bien', searchBien)
+    if (searchQuery)    params.set('q', searchQuery)
+    if (searchQuartier) params.set('quartier', searchQuartier)
     navigate(`/annonces?${params}`)
   }
 
@@ -116,8 +118,15 @@ export default function HomePage() {
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
-            placeholder="Commune, quartier, ville..."
-            className="flex-[2] min-w-[160px] px-3 py-2.5 border-2 border-slate-200 rounded-lg text-sm font-['Inter'] focus:outline-none focus:border-navy-900"
+            placeholder="Commune, ville..."
+            className="flex-[2] min-w-[140px] px-3 py-2.5 border-2 border-slate-200 rounded-lg text-sm font-['Inter'] focus:outline-none focus:border-navy-900"
+          />
+          <input
+            type="text"
+            value={searchQuartier}
+            onChange={e => setSearchQuartier(e.target.value)}
+            placeholder="Quartier..."
+            className="flex-[1] min-w-[120px] px-3 py-2.5 border-2 border-slate-200 rounded-lg text-sm font-['Inter'] focus:outline-none focus:border-navy-900"
           />
           <button type="submit" className="btn-orange flex items-center gap-2 whitespace-nowrap">
             <Search size={15} /> Rechercher

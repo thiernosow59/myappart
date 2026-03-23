@@ -35,7 +35,8 @@ exports.handler = async (event) => {
 
       if (q.type)    { conditions.push(`a.transaction = $${idx++}`); params.push(q.type) }
       if (q.bien)    { conditions.push(`a.type_bien = $${idx++}`);   params.push(q.bien) }
-      if (q.commune) { conditions.push(`a.commune ILIKE $${idx++}`); params.push(q.commune) }
+      if (q.commune)  { conditions.push(`a.commune ILIKE $${idx++}`);  params.push(q.commune) }
+      if (q.quartier) { conditions.push(`a.quartier ILIKE $${idx++}`); params.push(`%${q.quartier}%`) }
       if (q.q)       {
         conditions.push(`(a.titre ILIKE $${idx} OR a.description ILIKE $${idx} OR a.quartier ILIKE $${idx})`)
         params.push(`%${q.q}%`); idx++
