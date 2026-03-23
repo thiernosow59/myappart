@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import AnnonceCard from '../components/ui/AnnonceCard'
-import { annoncesApi } from '../lib/api'
+import { annoncesApi, statsApi } from '../lib/api'
 
 const QUICK_FILTERS = [
   { label: 'Tous',          params: {} },
@@ -20,6 +20,7 @@ export default function HomePage() {
   const [annonces, setAnnonces]       = useState([])
   const [loading, setLoading]         = useState(true)
   const [activeFilter, setActiveFilter] = useState(0)
+  const [stats, setStats]             = useState({ annonces: 0, proprietaires: 0, agences: 0 })
 
   // Search state
   const [searchType, setSearchType]  = useState('vente')
@@ -29,6 +30,10 @@ export default function HomePage() {
   useEffect(() => {
     loadAnnonces(QUICK_FILTERS[activeFilter].params)
   }, [activeFilter])
+
+  useEffect(() => {
+    statsApi.get().then(setStats).catch(() => {})
+  }, [])
 
   async function loadAnnonces(params = {}) {
     setLoading(true)
@@ -121,9 +126,13 @@ export default function HomePage() {
 
         {/* Stats */}
         <div className="flex gap-10 justify-center mt-10">
-          {[['1 200+', 'Annonces actives'], ['850+', 'Propriétaires'], ['120+', 'Agences']].map(([n, l]) => (
+          {[
+            [stats.annonces,      'Annonces actives'],
+            [stats.proprietaires, 'Propriétaires'],
+            [stats.agences,       'Agences'],
+          ].map(([n, l]) => (
             <div key={l} className="text-white text-center">
-              <strong className="block text-2xl font-extrabold">{n}</strong>
+              <strong className="block text-2xl font-extrabold">{n > 0 ? `${n}+` : n}</strong>
               <span className="text-xs opacity-70">{l}</span>
             </div>
           ))}

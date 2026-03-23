@@ -61,6 +61,11 @@ export const uploadApi = {
   },
 }
 
+/* ── Stats ── */
+export const statsApi = {
+  get: () => req('/stats'),
+}
+
 /* ── Favoris ── */
 export const favorisApi = {
   list:   (token) => req('/favoris', { headers: { Authorization: `Bearer ${token}` } }),
