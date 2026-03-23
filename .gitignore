@@ -1,0 +1,9 @@
+node_modules/
+client/node_modules/
+client/dist/
+client/.env
+netlify/functions/node_modules/
+.env
+.env.local
+.netlify/
+tmp/

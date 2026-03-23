@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyAppart — Option C : Hybride</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background: #F1F5F9; color: #1e293b; }
+
+    /* ── LOSANGES BACKGROUND ── */
+    .bg-pattern {
+      position: fixed; inset: 0;
+      pointer-events: none; z-index: 0;
+    }
+    .bg-pattern svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+    nav, section, .quick-filters-wrap, .section, .banner, footer {
+      position: relative; z-index: 1;
+    }
+
+    /* ── NAVBAR ── */
+    nav {
+      background: #0D1B3E;
+      padding: 0 40px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo img { height: 36px; filter: brightness(0) invert(1); }
+    .logo span { font-size: 18px; font-weight: 700; color: #fff; }
+    .logo span em { color: #5BC8E2; font-style: normal; }
+    .nav-links { display: flex; gap: 28px; }
+    .nav-links a { text-decoration: none; color: rgba(255,255,255,0.7); font-size: 14px; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: #fff; }
+    .nav-right { display: flex; gap: 10px; align-items: center; }
+    .btn-outline { padding: 8px 18px; border: 1.5px solid rgba(255,255,255,0.3); color: #fff; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; background: transparent; }
+    .btn-primary { padding: 8px 18px; background: #F97316; color: #fff; border: none; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+    /* ── HERO ── */
+    .hero {
+      background: #0D1B3E;
+      padding: 72px 40px 90px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(91,200,226,0.15) 0%, transparent 70%);
+    }
+    /* City silhouette */
+    .hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+      background: #F1F5F9;
+      clip-path: polygon(0 100%, 0 60%, 5% 60%, 5% 30%, 8% 30%, 8% 60%, 12% 60%, 12% 45%, 15% 45%, 15% 60%, 20% 60%, 20% 20%, 23% 20%, 23% 60%, 28% 60%, 28% 40%, 31% 40%, 31% 60%, 35% 60%, 35% 50%, 38% 50%, 38% 60%, 45% 60%, 45% 35%, 48% 35%, 48% 60%, 52% 60%, 52% 25%, 55% 25%, 55% 60%, 60% 60%, 60% 45%, 63% 45%, 63% 60%, 68% 60%, 68% 30%, 71% 30%, 71% 60%, 75% 60%, 75% 50%, 78% 50%, 78% 60%, 82% 60%, 82% 40%, 85% 40%, 85% 60%, 90% 60%, 90% 55%, 93% 55%, 93% 60%, 100% 60%, 100% 100%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(91,200,226,0.15);
+      border: 1px solid rgba(91,200,226,0.3);
+      color: #5BC8E2;
+      padding: 6px 16px; border-radius: 999px;
+      font-size: 13px; font-weight: 500;
+      margin-bottom: 22px;
+      position: relative; z-index: 1;
+    }
+    .hero h1 {
+      font-size: 50px; font-weight: 800; color: #fff;
+      line-height: 1.15; margin-bottom: 14px;
+      position: relative; z-index: 1;
+    }
+    .hero h1 .accent { color: #F97316; }
+    .hero p { color: rgba(255,255,255,0.65); font-size: 17px; margin-bottom: 44px; position: relative; z-index: 1; }
+
+    /* Search box */
+    .search-box {
+      background: #fff;
+      border-radius: 14px;
+      padding: 8px;
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+      max-width: 800px; width: 100%;
+      flex-wrap: wrap;
+      position: relative; z-index: 1;
+    }
+    .search-select {
+      padding: 10px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      color: #1e293b;
+      background: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer; flex: 1; min-width: 120px;
+    }
+    .search-input {
+      padding: 10px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      flex: 2; min-width: 160px; outline: none;
+    }
+    .search-btn {
+      background: #F97316;
+      color: #fff; border: none;
+      border-radius: 10px;
+      padding: 11px 28px;
+      font-size: 15px; font-weight: 700;
+      cursor: pointer; white-space: nowrap;
+    }
+    .hero-stats { display: flex; gap: 48px; justify-content: center; margin-top: 40px; position: relative; z-index: 1; }
+    .hero-stat { text-align: center; }
+    .hero-stat strong { display: block; font-size: 26px; font-weight: 800; color: #fff; }
+    .hero-stat span { font-size: 13px; color: rgba(255,255,255,0.5); }
+
+    /* ── FILTRES RAPIDES ── */
+    .quick-filters-wrap { background: #fff; border-bottom: 1px solid #e2e8f0; padding: 0 40px; }
+    .quick-filters { display: flex; gap: 4px; overflow-x: auto; padding: 12px 0; }
+    .filter-chip {
+      padding: 7px 18px; border-radius: 8px;
+      border: none; background: transparent;
+      font-size: 13px; font-weight: 500; color: #64748b;
+      cursor: pointer; transition: all .2s;
+      white-space: nowrap;
+    }
+    .filter-chip:hover { background: #f1f5f9; color: #1e293b; }
+    .filter-chip.active { background: #EFF6FF; color: #1A3D6E; font-weight: 600; }
+
+    /* ── ANNONCES ── */
+    .section { padding: 40px 40px; max-width: 1280px; margin: 0 auto; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .section-title { font-size: 20px; font-weight: 700; color: #1e293b; }
+    .see-all { color: #1A3D6E; font-size: 14px; font-weight: 600; text-decoration: none; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 18px; }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+      border: 1px solid #e2e8f0;
+      transition: transform .2s, box-shadow .2s;
+      cursor: pointer;
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.1); border-color: #bfdbfe; }
+    .card-img {
+      width: 100%; height: 196px;
+      background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px; position: relative;
+    }
+    .card-badge {
+      position: absolute; top: 12px; left: 12px;
+      background: #0D1B3E; color: #fff;
+      font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 6px;
+      text-transform: uppercase; letter-spacing: .5px;
+    }
+    .card-badge.location { background: #059669; }
+    .card-fav {
+      position: absolute; top: 12px; right: 12px;
+      background: rgba(255,255,255,0.9); border-radius: 50%;
+      width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .card-ref {
+      position: absolute; bottom: 10px; left: 12px;
+      background: rgba(0,0,0,0.5); color: #fff;
+      font-size: 10px; padding: 2px 8px; border-radius: 4px;
+    }
+    .card-body { padding: 16px; }
+    .card-price { font-size: 19px; font-weight: 800; color: #0D1B3E; }
+    .card-price span { font-size: 13px; font-weight: 400; color: #94a3b8; margin-left: 4px; }
+    .card-title { font-size: 14px; font-weight: 600; color: #1e293b; margin: 6px 0 4px; }
+    .card-loc { font-size: 13px; color: #64748b; }
+    .card-features { display: flex; gap: 12px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f1f5f9; }
+    .card-feat { font-size: 12px; color: #64748b; }
+    .card-footer { padding: 10px 16px; background: #f8fafc; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .card-agent { font-size: 12px; color: #94a3b8; }
+    .card-contact { font-size: 12px; color: #F97316; font-weight: 600; cursor: pointer; }
+
+    /* ── BANNER CTA ── */
+    .banner {
+      background: #0D1B3E;
+      border-radius: 20px;
+      padding: 52px 40px;
+      text-align: center;
+      max-width: 1200px;
+      margin: 0 auto 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .banner::before {
+      content: '';
+      position: absolute; top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(91,200,226,0.15), transparent 70%);
+    }
+    .banner h2 { font-size: 28px; font-weight: 800; color: #fff; margin-bottom: 10px; position: relative; z-index: 1; }
+    .banner p { color: rgba(255,255,255,0.6); font-size: 15px; margin-bottom: 28px; position: relative; z-index: 1; }
+    .banner .btn-orange { background: #F97316; color: #fff; border: none; padding: 14px 36px; border-radius: 10px; font-size: 15px; font-weight: 700; cursor: pointer; position: relative; z-index: 1; }
+
+    /* ── FOOTER ── */
+    footer { background: #0D1B3E; color: rgba(255,255,255,0.5); text-align: center; padding: 28px 40px; font-size: 13px; }
+    footer span { color: #5BC8E2; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+<!-- LOSANGES BACKGROUND -->
+<div class="bg-pattern">
+  <!-- Points -->
+  <svg xmlns="http://www.w3.org/2000/svg" opacity="0.06">
+    <defs>
+      <pattern id="dots" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
+        <circle cx="2" cy="2" r="1.5" fill="#1A3D6E" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#dots)" />
+  </svg>
+  <!-- Losanges -->
+  <svg xmlns="http://www.w3.org/2000/svg" opacity="0.05">
+    <defs>
+      <pattern id="diamonds" x="0" y="0" width="120" height="120" patternUnits="userSpaceOnUse">
+        <path d="M60 4 L116 60 L60 116 L4 60 Z" fill="none" stroke="#1A3D6E" stroke-width="1.2" />
+        <path d="M60 22 L98 60 L60 98 L22 60 Z" fill="none" stroke="#1A3D6E" stroke-width="1" />
+        <path d="M60 40 L80 60 L60 80 L40 60 Z" fill="none" stroke="#1A3D6E" stroke-width="0.8" />
+      </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#diamonds)" />
+  </svg>
+</div>
+
+<!-- NAVBAR -->
+<nav>
+  <a class="logo" href="#">
+    <img src="logo/MyAppart.png" alt="MyAppart" />
+    <span>My <em>Appart</em></span>
+  </a>
+  <div class="nav-links">
+    <a href="#">Acheter</a>
+    <a href="#">Louer</a>
+    <a href="#">Terrains</a>
+    <a href="#">Publier une annonce</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-outline">Connexion</button>
+    <button class="btn-primary">Inscription</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🏠 N°1 de l'immobilier en Guinée</div>
+  <h1>Trouvez votre bien idéal<br/>en <span class="accent">Guinée</span></h1>
+  <p>Des milliers d'annonces de maisons, appartements et terrains<br/>à Conakry et dans tout le pays.</p>
+
+  <div class="search-box">
+    <select class="search-select">
+      <option>Acheter</option>
+      <option>Louer</option>
+    </select>
+    <select class="search-select">
+      <option>Tout type</option>
+      <option>Maison</option>
+      <option>Appartement</option>
+      <option>Terrain</option>
+    </select>
+    <input class="search-input" type="text" placeholder="Commune, quartier, ville..." />
+    <button class="search-btn">🔍 Rechercher</button>
+  </div>
+
+  <div class="hero-stats">
+    <div class="hero-stat"><strong>1 200+</strong><span>Annonces actives</span></div>
+    <div class="hero-stat"><strong>850+</strong><span>Propriétaires</span></div>
+    <div class="hero-stat"><strong>120+</strong><span>Agences</span></div>
+  </div>
+</section>
+
+<!-- FILTRES -->
+<div class="quick-filters-wrap">
+  <div class="quick-filters">
+    <div class="filter-chip active">Tous</div>
+    <div class="filter-chip">🏘️ Maisons</div>
+    <div class="filter-chip">🏢 Appartements</div>
+    <div class="filter-chip">🌿 Terrains</div>
+    <div class="filter-chip">📍 Kaloum</div>
+    <div class="filter-chip">📍 Ratoma</div>
+    <div class="filter-chip">📍 Matam</div>
+    <div class="filter-chip">📍 Dixinn</div>
+    <div class="filter-chip">📍 Matoto</div>
+  </div>
+</div>
+
+<!-- ANNONCES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-title">Annonces récentes</div>
+    <a class="see-all" href="#">Voir tout →</a>
+  </div>
+  <div class="cards">
+
+    <div class="card">
+      <div class="card-img">🏠
+        <div class="card-badge">Vente</div>
+        <div class="card-fav">♡</div>
+        <div class="card-ref">MA-2026-A00042</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">185 000 000 GNF</div>
+        <div class="card-title">Villa F5 moderne avec jardin</div>
+        <div class="card-loc">📍 Ratoma, Conakry</div>
+        <div class="card-features">
+          <span class="card-feat">🛏 5 ch.</span>
+          <span class="card-feat">🚿 3 sdb</span>
+          <span class="card-feat">📐 220 m²</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-agent">Par Propriétaire</span>
+        <span class="card-contact">Contacter →</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img" style="background:linear-gradient(135deg,#d1fae5,#a7f3d0)">🏢
+        <div class="card-badge location">Location</div>
+        <div class="card-fav">♡</div>
+        <div class="card-ref">MA-2026-A00038</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">2 500 000 GNF <span>/mois</span></div>
+        <div class="card-title">Appartement F3 meublé, vue mer</div>
+        <div class="card-loc">📍 Kaloum, Conakry</div>
+        <div class="card-features">
+          <span class="card-feat">🛏 3 ch.</span>
+          <span class="card-feat">🚿 2 sdb</span>
+          <span class="card-feat">📐 95 m²</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-agent">Via Agence</span>
+        <span class="card-contact">Contacter →</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img" style="background:linear-gradient(135deg,#fef3c7,#fde68a)">🌿
+        <div class="card-badge">Vente</div>
+        <div class="card-fav">♡</div>
+        <div class="card-ref">MA-2026-A00031</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">45 000 000 GNF</div>
+        <div class="card-title">Terrain constructible 500m²</div>
+        <div class="card-loc">📍 Matam, Conakry</div>
+        <div class="card-features">
+          <span class="card-feat">📐 500 m²</span>
+          <span class="card-feat">✅ Viabilisé</span>
+          <span class="card-feat">📜 Titre foncier</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-agent">Par Propriétaire</span>
+        <span class="card-contact">Contacter →</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-img" style="background:linear-gradient(135deg,#ede9fe,#ddd6fe)">🏠
+        <div class="card-badge location">Location</div>
+        <div class="card-fav">♡</div>
+        <div class="card-ref">MA-2026-A00027</div>
+      </div>
+      <div class="card-body">
+        <div class="card-price">1 800 000 GNF <span>/mois</span></div>
+        <div class="card-title">Appartement F2 centre-ville</div>
+        <div class="card-loc">📍 Dixinn, Conakry</div>
+        <div class="card-features">
+          <span class="card-feat">🛏 2 ch.</span>
+          <span class="card-feat">🚿 1 sdb</span>
+          <span class="card-feat">📐 65 m²</span>
+        </div>
+      </div>
+      <div class="card-footer">
+        <span class="card-agent">Via Agence</span>
+        <span class="card-contact">Contacter →</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BANNER CTA -->
+<div class="banner">
+  <h2>Vous avez un bien à vendre ou à louer ?</h2>
+  <p>Publiez votre annonce gratuitement et touchez des milliers d'acheteurs potentiels en Guinée.</p>
+  <button class="btn-orange">Publier gratuitement</button>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  © 2026 <span>My Appart</span> · Guinée · Tous droits réservés
+</footer>
+
+</body>
+</html>

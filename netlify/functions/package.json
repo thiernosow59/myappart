@@ -1,0 +1,9 @@
+{
+  "name": "myappart-functions",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.0",
+    "pg": "^8.13.0"
+  }
+}
