@@ -5,14 +5,13 @@ import AnnonceCard from '../components/ui/AnnonceCard'
 import { annoncesApi, statsApi } from '../lib/api'
 
 const QUICK_FILTERS = [
-  { label: 'Tous',          params: {} },
+  { label: 'Tous',           params: {} },
   { label: '🏘️ Maisons',     params: { bien: 'maison' } },
   { label: '🏢 Appartements',params: { bien: 'appartement' } },
+  { label: '🌿 Terrains',    params: { bien: 'terrain' } },
   { label: '🏷️ Vendre',      params: { type: 'vente' } },
-  { label: '📍 Kaloum',      params: { commune: 'Kaloum' } },
-  { label: '📍 Ratoma',      params: { commune: 'Ratoma' } },
-  { label: '📍 Matam',       params: { commune: 'Matam' } },
-  { label: '📍 Dixinn',      params: { commune: 'Dixinn' } },
+  { label: '🔑 Louer',       params: { type: 'location' } },
+  { label: '🛒 Acheter',     params: { type: 'vente' } },
 ]
 
 export default function HomePage() {
