@@ -30,7 +30,7 @@ export default function Navbar() {
         <div className="hidden md:flex items-center gap-7">
           <Link to="/annonces?type=vente"    className="text-slate-500 text-sm font-medium hover:text-navy-900 transition-colors">Acheter</Link>
           <Link to="/annonces?type=location" className="text-slate-500 text-sm font-medium hover:text-navy-900 transition-colors">Louer</Link>
-          <Link to="/annonces?bien=terrain"  className="text-slate-500 text-sm font-medium hover:text-navy-900 transition-colors">Terrains</Link>
+          <Link to="/publier"  className="text-slate-500 text-sm font-medium hover:text-navy-900 transition-colors">Vendre</Link>
         </div>
 
         {/* Right */}
@@ -93,7 +93,7 @@ export default function Navbar() {
         <div className="md:hidden bg-white border-t border-slate-100 px-4 py-3 flex flex-col gap-3">
           <Link to="/annonces?type=vente"    className="text-slate-600 text-sm py-1" onClick={() => setOpen(false)}>Acheter</Link>
           <Link to="/annonces?type=location" className="text-slate-600 text-sm py-1" onClick={() => setOpen(false)}>Louer</Link>
-          <Link to="/annonces?bien=terrain"  className="text-slate-600 text-sm py-1" onClick={() => setOpen(false)}>Terrains</Link>
+          <Link to="/publier"  className="text-slate-600 text-sm py-1" onClick={() => setOpen(false)}>Vendre</Link>
           {!user && (
             <div className="flex gap-2 pt-2">
               <Link to="/connexion"   className="btn-outline flex-1 text-center text-sm" onClick={() => setOpen(false)}>Connexion</Link>
