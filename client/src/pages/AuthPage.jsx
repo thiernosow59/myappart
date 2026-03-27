@@ -52,6 +52,7 @@ export default function AuthPage({ mode = 'login' }) {
       } else {
         // Inscription
         if (!form.nom.trim()) throw new Error('Le nom est requis')
+        if (!form.prenom.trim()) throw new Error('Le prénom est requis')
         if (form.password.length < 12) throw new Error('Le mot de passe doit faire au moins 12 caractères')
         if (form.password.length > 20) throw new Error('Le mot de passe ne doit pas dépasser 20 caractères')
         if (form.password !== form.confirmPassword) throw new Error('Les mots de passe ne correspondent pas')
@@ -128,8 +129,8 @@ export default function AuthPage({ mode = 'login' }) {
                   <input className="input-field" placeholder="Votre nom" value={form.nom} onChange={e => setF('nom', e.target.value)} required />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Prénom</label>
-                  <input className="input-field" placeholder="Votre prénom" value={form.prenom} onChange={e => setF('prenom', e.target.value)} />
+                  <label className="text-xs font-semibold text-slate-500 mb-1 block">Prénom *</label>
+                  <input className="input-field" placeholder="Votre prénom" value={form.prenom} onChange={e => setF('prenom', e.target.value)} required />
                 </div>
               </div>
             )}
