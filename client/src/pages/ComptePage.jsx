@@ -65,12 +65,12 @@ export default function ComptePage() {
         <form onSubmit={handleSave} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold text-slate-500 mb-1 block">Nom</label>
-              <input className="input-field" value={form.nom} onChange={e => setForm(f => ({ ...f, nom: e.target.value }))} />
+              <label className="text-xs font-semibold text-slate-500 mb-1 block">Nom *</label>
+              <input className="input-field" value={form.nom} onChange={e => setForm(f => ({ ...f, nom: e.target.value }))} required />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-500 mb-1 block">Prénom</label>
-              <input className="input-field" value={form.prenom} onChange={e => setForm(f => ({ ...f, prenom: e.target.value }))} />
+              <label className="text-xs font-semibold text-slate-500 mb-1 block">Prénom *</label>
+              <input className="input-field" value={form.prenom} onChange={e => setForm(f => ({ ...f, prenom: e.target.value }))} required />
             </div>
           </div>
           <div>
@@ -82,11 +82,10 @@ export default function ComptePage() {
           </div>
           <div>
             <label className="text-xs font-semibold text-slate-500 mb-2 block">Rôle</label>
-            <select className="input-field" value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value }))}>
-              <option value="utilisateur">🔍 Utilisateur</option>
-              <option value="proprietaire">🏠 Propriétaire</option>
-              <option value="agence">🏢 Agence</option>
-            </select>
+            <div className="input-field bg-slate-50 text-slate-500 cursor-not-allowed">
+              {ROLE_LABELS[profile?.role] || profile?.role}
+            </div>
+            <p className="text-xs text-slate-400 mt-1">Le rôle ne peut pas être modifié après la création du compte.</p>
           </div>
           <button type="submit" disabled={loading} className="btn-primary">
             {loading ? 'Enregistrement...' : 'Enregistrer'}

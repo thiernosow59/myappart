@@ -17,7 +17,7 @@ const EQUIPEMENTS = [
   { key: 'internet',     label: 'Internet' },
   { key: 'autres',       label: 'Autres' },
 ]
-const COMMUNES = ['Kaloum', 'Matam', 'Ratoma', 'Dixinn', 'Matoto']
+const COMMUNES = ['Kaloum', 'Matam', 'Ratoma', 'Dixinn', 'Matoto', 'Autres']
 
 export default function PublierPage() {
   const navigate = useNavigate()
