@@ -15,23 +15,11 @@ export function AuthProvider({ children }) {
     try {
       const data = await profileApi.get(sbUser.id)
       setProfile(data)
-    } catch {
-      // Profil pas encore créé — on le crée automatiquement
-      const rawEmail = sbUser.email || null
-      const realEmail = rawEmail && !rawEmail.endsWith('@myappart.local') ? rawEmail : null
-      try {
-        const data = await profileApi.create({
-          supabase_uid: sbUser.id,
-          email: realEmail,
-          nom: sbUser.user_metadata?.nom || 'Utilisateur',
-          prenom: sbUser.user_metadata?.prenom || '',
-          phone: sbUser.user_metadata?.phone || null,
-          role: sbUser.user_metadata?.role || 'utilisateur',
-        })
-        setProfile(data)
-      } catch (err) {
-        console.error('Erreur création profil auto:', err)
-      }
+    } catch (err) {
+      // Pas de profil ou compte désactivé → déconnexion
+      setProfile(null)
+      await supabase.auth.signOut()
+      setUser(null)
     }
   }
 

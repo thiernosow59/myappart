@@ -16,6 +16,7 @@ CREATE TABLE IF NOT EXISTS profiles (
   email        TEXT,
   role         TEXT NOT NULL DEFAULT 'utilisateur'
                CHECK (role IN ('utilisateur', 'proprietaire', 'agence')),
+  is_active    BOOLEAN DEFAULT true,
   created_at   TIMESTAMPTZ DEFAULT NOW(),
   updated_at   TIMESTAMPTZ DEFAULT NOW()
 );
