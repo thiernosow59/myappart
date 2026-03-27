@@ -2,6 +2,16 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { profileApi } from '../lib/api'
 
+const APP_ID = 'myappart'
+
+// Transforme l'email pour isoler les comptes par app dans Supabase
+// ex: user@gmail.com → user.myappart@gmail.com
+function toAppEmail(email) {
+  if (!email || email.includes('@myappart.local')) return email
+  const at = email.lastIndexOf('@')
+  return `${email.slice(0, at)}.${APP_ID}@${email.slice(at + 1)}`
+}
+
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
@@ -48,20 +58,17 @@ export function AuthProvider({ children }) {
 
   /* ── Inscription ── */
   async function signUp({ email, password, nom, prenom, phone, role }) {
+    const appEmail = toAppEmail(email)
     const { data, error } = await supabase.auth.signUp({
-      email,
+      email: appEmail,
       password,
-      options: {
-        data: { nom, prenom, phone, role, app_id: 'myappart' },
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
+      options: { data: { nom, prenom, phone, role, app_id: APP_ID } },
     })
     if (error) throw error
 
-    // Créer profil Neon
     await profileApi.create({
       supabase_uid: data.user.id,
-      email,
+      email,        // email réel stocké dans Neon
       nom,
       prenom,
       phone: phone || null,
@@ -73,7 +80,10 @@ export function AuthProvider({ children }) {
 
   /* ── Connexion email ── */
   async function signInEmail({ email, password }) {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: toAppEmail(email),
+      password,
+    })
     if (error) throw error
     return data
   }
