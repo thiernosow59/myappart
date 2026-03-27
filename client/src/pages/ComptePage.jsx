@@ -52,7 +52,7 @@ export default function ComptePage() {
           </div>
           <div>
             <div className="font-bold text-slate-800">{profile?.prenom} {profile?.nom}</div>
-            <div className="text-sm text-slate-400">{user.email}</div>
+            <div className="text-sm text-slate-400">{profile?.email || user.email}</div>
             <div className="text-xs bg-navy-50 text-navy-900 border border-navy-100 px-2 py-0.5 rounded-full inline-block mt-1">
               {ROLE_LABELS[profile?.role] || profile?.role}
             </div>
@@ -85,7 +85,6 @@ export default function ComptePage() {
             <div className="input-field bg-slate-50 text-slate-500 cursor-not-allowed">
               {ROLE_LABELS[profile?.role] || profile?.role}
             </div>
-            <p className="text-xs text-slate-400 mt-1">Le rôle ne peut pas être modifié après la création du compte.</p>
           </div>
           <button type="submit" disabled={loading} className="btn-primary">
             {loading ? 'Enregistrement...' : 'Enregistrer'}
