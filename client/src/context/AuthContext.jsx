@@ -66,14 +66,16 @@ export function AuthProvider({ children }) {
     })
     if (error) throw error
 
-    await profileApi.create({
+    const profileData = await profileApi.create({
       supabase_uid: data.user.id,
-      email,        // email réel stocké dans Neon
+      email,
       nom,
       prenom,
       phone: phone || null,
       role,
     })
+    setProfile(profileData)
+    setNeedsProfile(false)
 
     return data
   }
