@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { Mail, Phone } from 'lucide-react'
 
 export default function Footer() {
   return (
@@ -30,8 +31,8 @@ export default function Footer() {
         <div>
           <h4 className="text-white font-semibold text-sm mb-3">Contact</h4>
           <ul className="space-y-2 text-sm">
-            <li><a href="mailto:contact@ts-group.fr" className="hover:text-white transition-colors">contact@ts-group.fr</a></li>
-            <li><a href="tel:+224600000000" className="hover:text-white transition-colors">+224 6XX XX XX XX</a></li>
+            <li><a href="mailto:contact@ts-group.fr" className="flex items-center gap-2 hover:text-white transition-colors"><Mail size={13} />contact@ts-group.fr</a></li>
+            <li><a href="tel:+224600000000" className="flex items-center gap-2 hover:text-white transition-colors"><Phone size={13} />+224 6XX XX XX XX</a></li>
           </ul>
         </div>
       </div>
