@@ -138,8 +138,10 @@ export default function AuthPage({ mode = 'login' }) {
             {(loginMethod === 'email' || !isLogin) && (
               <div>
                 <label className="text-xs font-semibold text-slate-500 mb-1 block">Email {!isLogin && '(ou téléphone ci-dessous)'}</label>
-                <input type="email" className="input-field" placeholder="thierno@email.com"
-                  value={form.email} onChange={e => setF('email', e.target.value)}
+                <input type="email" className="input-field" placeholder="exemple@domaine.com"
+                  value={form.email}
+                  onChange={e => setF('email', e.target.value)}
+                  onBlur={e => { if (e.target.value && !validateEmail(e.target.value)) setError('Format email invalide (ex: exemple@domaine.com)') }}
                   required={isLogin && loginMethod === 'email'} />
               </div>
             )}
