@@ -5,21 +5,30 @@ import { profileApi } from '../lib/api'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser]       = useState(null)
-  const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [user, setUser]             = useState(null)
+  const [profile, setProfile]       = useState(null)
+  const [loading, setLoading]       = useState(true)
+  const [needsProfile, setNeedsProfile] = useState(false)
 
   /* ── Chargement profil Neon ── */
   async function loadProfile(sbUser) {
-    if (!sbUser) { setProfile(null); return }
+    if (!sbUser) { setProfile(null); setNeedsProfile(false); return }
     try {
       const data = await profileApi.get(sbUser.id)
       setProfile(data)
+      setNeedsProfile(false)
     } catch (err) {
-      // Pas de profil ou compte désactivé → déconnexion
-      setProfile(null)
-      await supabase.auth.signOut()
-      setUser(null)
+      if (err.message.includes('403') || err.message.toLowerCase().includes('désactivé')) {
+        // Compte désactivé → déconnexion
+        setProfile(null)
+        setNeedsProfile(false)
+        await supabase.auth.signOut()
+        setUser(null)
+      } else {
+        // Pas de profil MyAppart → demander de compléter le profil
+        setProfile(null)
+        setNeedsProfile(true)
+      }
     }
   }
 
@@ -89,7 +98,7 @@ export function AuthProvider({ children }) {
     return data.session?.access_token || null
   }
 
-  const value = { user, profile, loading, signUp, signInEmail, signInPhone, signOut, getToken, loadProfile }
+  const value = { user, profile, loading, needsProfile, setNeedsProfile, signUp, signInEmail, signInPhone, signOut, getToken, loadProfile }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
