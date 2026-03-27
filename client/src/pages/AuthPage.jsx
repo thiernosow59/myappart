@@ -74,7 +74,7 @@ export default function AuthPage({ mode = 'login' }) {
           phone: form.phone || null,
           role: form.role,
         })
-        setSuccess('Compte créé ! Vérifiez votre email pour confirmer.')
+        setSuccess('created')
       }
     } catch (err) {
       setError(err.message)
@@ -95,18 +95,30 @@ export default function AuthPage({ mode = 'login' }) {
             </h1>
           </div>
 
-          {success && (
-            <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-3 rounded-lg mb-5">
-              {success}
+          {success === 'created' ? (
+            <div className="text-center py-4">
+              <div className="text-5xl mb-4">🎉</div>
+              <h2 className="text-lg font-bold text-slate-800 mb-2">Compte créé avec succès !</h2>
+              <p className="text-sm text-slate-500 mb-6">Votre compte MyAppart est prêt. Vous pouvez maintenant vous connecter.</p>
+              <button
+                onClick={() => { setSuccess(''); setIsLogin(true) }}
+                className="btn-primary w-full py-3 text-sm mb-3">
+                Se connecter
+              </button>
+              <button
+                onClick={() => { setSuccess(''); navigate('/') }}
+                className="text-sm text-slate-400 hover:text-slate-600">
+                Retour à l'accueil
+              </button>
             </div>
-          )}
+          ) : null}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-600 text-sm px-4 py-3 rounded-lg mb-5">
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {success !== 'created' && <><form onSubmit={handleSubmit} className="space-y-4">
             {/* Login : toggle email/phone */}
             {isLogin && (
               <div className="flex rounded-lg border border-slate-200 overflow-hidden text-sm">
@@ -212,6 +224,7 @@ export default function AuthPage({ mode = 'login' }) {
               {isLogin ? "S'inscrire" : 'Se connecter'}
             </button>
           </p>
+        </>}
         </div>
       </div>
     </div>
