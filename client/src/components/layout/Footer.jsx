@@ -7,7 +7,7 @@ export default function Footer() {
         <div>
           <div className="flex items-center gap-2 mb-3">
             <img src="/logo/MyAppart.png" alt="MyAppart" className="h-8" style={{ mixBlendMode: 'screen' }} />
-            <span className="text-white font-bold text-lg tracking-tight">My Appart</span>
+            <span className="text-white font-bold text-lg tracking-tight" translate="no">My Appart</span>
           </div>
           <p className="text-xs leading-relaxed">N°1 de l'immobilier en Guinée. Achat, vente, location.</p>
         </div>
@@ -28,9 +28,10 @@ export default function Footer() {
           </ul>
         </div>
         <div>
-          <h4 className="text-white font-semibold text-sm mb-3">TS Group</h4>
+          <h4 className="text-white font-semibold text-sm mb-3">Contact</h4>
           <ul className="space-y-2 text-sm">
-            <li><a href="https://ts-group.fr" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">ts-group.fr</a></li>
+            <li><a href="mailto:contact@ts-group.fr" className="hover:text-white transition-colors">contact@ts-group.fr</a></li>
+            <li><a href="tel:+224600000000" className="hover:text-white transition-colors">+224 6XX XX XX XX</a></li>
           </ul>
         </div>
       </div>

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const ROLES = [
@@ -26,9 +26,13 @@ export default function AuthPage({ mode = 'login' }) {
 
   function setF(k, v) { setForm(f => ({ ...f, [k]: v })); setError('') }
 
+  function validateEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  }
+
   function validatePhone(phone) {
     const digits = phone.replace(/\D/g, '')
-    return digits.length >= 8 && digits.length <= 12
+    return /^6\d{8}$/.test(digits)
   }
 
   async function handleSubmit(e) {
@@ -52,6 +56,8 @@ export default function AuthPage({ mode = 'login' }) {
         if (form.password.length > 20) throw new Error('Le mot de passe ne doit pas dépasser 20 caractères')
         if (form.password !== form.confirmPassword) throw new Error('Les mots de passe ne correspondent pas')
         if (!form.email && !form.phone) throw new Error('Email ou téléphone requis')
+        if (form.email && !validateEmail(form.email)) throw new Error('Format d\'email invalide')
+        if (form.phone && !validatePhone(form.phone)) throw new Error('Numéro guinéen invalide (ex: 622 34 56 78)')
 
         let email = form.email
         if (!email && form.phone) {
@@ -119,11 +125,11 @@ export default function AuthPage({ mode = 'login' }) {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="text-xs font-semibold text-slate-500 mb-1 block">Nom *</label>
-                  <input className="input-field" placeholder="SOW" value={form.nom} onChange={e => setF('nom', e.target.value)} required />
+                  <input className="input-field" placeholder="Votre nom" value={form.nom} onChange={e => setF('nom', e.target.value)} required />
                 </div>
                 <div>
                   <label className="text-xs font-semibold text-slate-500 mb-1 block">Prénom</label>
-                  <input className="input-field" placeholder="Thierno" value={form.prenom} onChange={e => setF('prenom', e.target.value)} />
+                  <input className="input-field" placeholder="Votre prénom" value={form.prenom} onChange={e => setF('prenom', e.target.value)} />
                 </div>
               </div>
             )}
@@ -147,7 +153,8 @@ export default function AuthPage({ mode = 'login' }) {
                 <div className="flex gap-2">
                   <span className="input-field w-auto px-3 text-slate-500 bg-slate-50 shrink-0">+224</span>
                   <input type="tel" className="input-field" placeholder="6XXXXXXXX"
-                    value={form.phone} onChange={e => setF('phone', e.target.value.replace(/\D/g, ''))}
+                    value={form.phone} maxLength={9}
+                    onChange={e => setF('phone', e.target.value.replace(/\D/g, '').slice(0, 9))}
                     required={isLogin && loginMethod === 'phone'} />
                 </div>
               </div>
