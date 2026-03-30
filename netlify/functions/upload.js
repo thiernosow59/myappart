@@ -1,9 +1,10 @@
 const { requireAuth } = require('./_auth')
 const { getPool }     = require('./_db')
 
-const CF_ACCOUNT = process.env.CF_ACCOUNT_ID
-const CF_TOKEN   = process.env.CF_API_TOKEN
-const BUCKET     = process.env.CF_BUCKET || 'myappart-media'
+const CF_ACCOUNT   = process.env.CF_ACCOUNT_ID
+const CF_TOKEN     = process.env.CF_API_TOKEN
+const BUCKET       = process.env.CF_BUCKET || 'myappart-media'
+const CF_R2_DOMAIN = process.env.CF_R2_DOMAIN || 'pub-71df7018b0d94e3e82f5b4e126fd55e0.r2.dev'
 
 // Tailles max et types autorisés
 const MAX_SIZE_BYTES = 5 * 1024 * 1024 // 5 Mo
@@ -69,7 +70,7 @@ exports.handler = async (event) => {
     }
 
     // URL publique
-    const publicUrl = `https://pub-${CF_ACCOUNT}.r2.dev/${key}`
+    const publicUrl = `https://${CF_R2_DOMAIN}/${key}`
 
     // Sauvegarder dans la table photos
     const { rows } = await pool.query(
