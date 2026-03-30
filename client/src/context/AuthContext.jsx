@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useRef, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import { profileApi } from '../lib/api'
 
@@ -19,6 +19,7 @@ export function AuthProvider({ children }) {
   const [profile, setProfile]       = useState(null)
   const [loading, setLoading]       = useState(true)
   const [needsProfile, setNeedsProfile] = useState(false)
+  const ignorNextSignIn = useRef(false)
 
   /* ── Chargement profil Neon ── */
   async function loadProfile(sbUser) {
@@ -48,7 +49,11 @@ export function AuthProvider({ children }) {
       loadProfile(session?.user ?? null).finally(() => setLoading(false))
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && ignorNextSignIn.current) {
+        ignorNextSignIn.current = false
+        return
+      }
       setUser(session?.user ?? null)
       loadProfile(session?.user ?? null)
     })
@@ -58,15 +63,16 @@ export function AuthProvider({ children }) {
 
   /* ── Inscription ── */
   async function signUp({ email, password, nom, prenom, phone, role }) {
+    ignorNextSignIn.current = true
     const appEmail = toAppEmail(email)
     const { data, error } = await supabase.auth.signUp({
       email: appEmail,
       password,
       options: { data: { nom, prenom, phone, role, app_id: APP_ID } },
     })
-    if (error) throw error
+    if (error) { ignorNextSignIn.current = false; throw error }
 
-    const profileData = await profileApi.create({
+    await profileApi.create({
       supabase_uid: data.user.id,
       email,
       nom,
@@ -74,7 +80,11 @@ export function AuthProvider({ children }) {
       phone: phone || null,
       role,
     })
-    setProfile(profileData)
+
+    // Déconnecter après création — l'utilisateur choisit quand se connecter
+    await supabase.auth.signOut()
+    setUser(null)
+    setProfile(null)
     setNeedsProfile(false)
 
     return data
