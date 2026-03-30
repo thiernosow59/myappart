@@ -36,6 +36,14 @@ export default function AnnonceCard({ annonce, onFavToggle, isFav }) {
         >
           <Heart size={15} className={isFav ? 'fill-red-500 text-red-500' : 'text-slate-400'} />
         </button>
+        {/* Badge disponibilité */}
+        {annonce.disponibilite && annonce.disponibilite !== 'disponible' && (
+          <div className={`absolute inset-0 flex items-center justify-center`}>
+            <div className={`text-white text-base font-extrabold px-5 py-2 rounded-full rotate-[-8deg] shadow-lg ${annonce.disponibilite === 'vendu' ? 'bg-red-500/90' : 'bg-orange-500/90'}`}>
+              {annonce.disponibilite === 'vendu' ? 'Vendu' : 'Loué'}
+            </div>
+          </div>
+        )}
         {/* Référence */}
         <div className="absolute bottom-3 left-3 bg-black/40 text-white text-[10px] font-mono px-2 py-0.5 rounded">
           {annonce.reference}

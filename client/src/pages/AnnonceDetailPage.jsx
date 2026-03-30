@@ -44,10 +44,17 @@ export default function AnnonceDetailPage() {
   const [msgText, setMsgText]       = useState('')
   const [sending, setSending]       = useState(false)
   const [msgSent, setMsgSent]       = useState(false)
+  const [copied, setCopied]         = useState(false)
 
   useEffect(() => {
     annoncesApi.get(id).then(data => { setAnnonce(data); setLoading(false) }).catch(() => setLoading(false))
   }, [id])
+
+  async function handleShare() {
+    await navigator.clipboard.writeText(window.location.href)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
 
   async function toggleFav() {
     if (!user) return navigate('/connexion')
@@ -101,10 +108,16 @@ export default function AnnonceDetailPage() {
                 ? <img src={photos[photoIdx]?.url} alt={annonce.titre} className="w-full h-full object-cover" />
                 : (annonce.type_bien === 'terrain' ? '🌿' : annonce.type_bien === 'appartement' ? '🏢' : '🏠')
               }
-              {/* Badge */}
+              {/* Badge transaction */}
               <div className={`absolute top-4 left-4 ${annonce.transaction === 'location' ? 'badge-location' : 'badge-vente'}`}>
                 {annonce.transaction === 'location' ? 'Location' : 'Vente'}
               </div>
+              {/* Badge disponibilité */}
+              {annonce.disponibilite && annonce.disponibilite !== 'disponible' && (
+                <div className={`absolute top-4 right-4 text-white text-xs font-bold px-3 py-1.5 rounded-full ${annonce.disponibilite === 'vendu' ? 'bg-red-500' : 'bg-orange-500'}`}>
+                  {annonce.disponibilite === 'vendu' ? 'Vendu' : 'Loué'}
+                </div>
+              )}
               {/* Référence */}
               <div className="absolute bottom-4 left-4 bg-black/40 text-white text-xs font-mono px-2 py-1 rounded">
                 {annonce.reference}
@@ -132,8 +145,9 @@ export default function AnnonceDetailPage() {
                 <button onClick={toggleFav} className="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center hover:border-red-300 transition-colors">
                   <Heart size={18} className={isFav ? 'fill-red-500 text-red-500' : 'text-slate-400'} />
                 </button>
-                <button className="w-10 h-10 rounded-full border-2 border-slate-200 flex items-center justify-center hover:border-navy-900 transition-colors">
-                  <Share2 size={18} className="text-slate-400" />
+                <button onClick={handleShare} title={copied ? 'Copié !' : 'Partager'}
+                  className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-colors ${copied ? 'border-emerald-400 bg-emerald-50' : 'border-slate-200 hover:border-navy-900'}`}>
+                  <Share2 size={18} className={copied ? 'text-emerald-500' : 'text-slate-400'} />
                 </button>
               </div>
             </div>

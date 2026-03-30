@@ -139,7 +139,7 @@ exports.handler = async (event) => {
       let   idx     = 1
       const fields  = ['titre','description','prix','negotiable','ville','commune','quartier',
                         'surface_m2','nb_pieces','nb_chambres','nb_salles_bain','etat','equipements',
-                        'equipements_autres','statut','disponible','client_id']
+                        'equipements_autres','statut','disponible','disponibilite','client_id']
       fields.forEach(f => {
         if (b[f] !== undefined) { updates.push(`${f} = $${idx++}`); params.push(b[f]) }
       })

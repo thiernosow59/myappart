@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { SlidersHorizontal, X } from 'lucide-react'
+import { SlidersHorizontal, X, ChevronLeft, ChevronRight } from 'lucide-react'
 import AnnonceCard from '../components/ui/AnnonceCard'
 import { annoncesApi, favorisApi } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
@@ -172,16 +172,35 @@ export default function AnnoncesPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mt-10">
-          {[...Array(totalPages)].map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setPage(i + 1)}
-              className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${page === i + 1 ? 'bg-navy-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}
-            >
-              {i + 1}
-            </button>
-          ))}
+        <div className="flex justify-center items-center gap-1.5 mt-10">
+          <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
+            className="w-9 h-9 rounded-lg flex items-center justify-center border border-slate-200 bg-white text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors">
+            <ChevronLeft size={16} />
+          </button>
+          {(() => {
+            const pages = []
+            const add = (p) => pages.push(p)
+            if (totalPages <= 7) {
+              for (let i = 1; i <= totalPages; i++) add(i)
+            } else {
+              add(1)
+              if (page > 3) add('...')
+              for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) add(i)
+              if (page < totalPages - 2) add('...')
+              add(totalPages)
+            }
+            return pages.map((p, i) => p === '...'
+              ? <span key={`e${i}`} className="w-9 h-9 flex items-center justify-center text-slate-400 text-sm">…</span>
+              : <button key={p} onClick={() => setPage(p)}
+                  className={`w-9 h-9 rounded-lg text-sm font-semibold transition-colors ${page === p ? 'bg-navy-900 text-white' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}>
+                  {p}
+                </button>
+            )
+          })()}
+          <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
+            className="w-9 h-9 rounded-lg flex items-center justify-center border border-slate-200 bg-white text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors">
+            <ChevronRight size={16} />
+          </button>
         </div>
       )}
     </div>

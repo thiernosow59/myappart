@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { dashboardApi, clientsApi, annoncesApi } from '../lib/api'
-import { Eye, Plus, Pencil, Trash2, ToggleLeft, ToggleRight, Users, X, ChevronRight, AlertTriangle } from 'lucide-react'
+import { Eye, Plus, Pencil, Trash2, ToggleLeft, ToggleRight, Users, X, AlertTriangle } from 'lucide-react'
 
 const STATUT_LABEL = { active: 'Active', inactive: 'Inactive', vendu: 'Vendu', loue: 'Loué' }
 const STATUT_COLOR = { active: 'bg-emerald-100 text-emerald-700', inactive: 'bg-slate-100 text-slate-500', vendu: 'bg-blue-100 text-blue-700', loue: 'bg-purple-100 text-purple-700' }
@@ -166,7 +166,8 @@ export default function DashboardPage() {
   // Modals annonces
   const [deleteAnnonce, setDeleteAnnonce] = useState(null)
   const [deletingAnnonce, setDeletingAnnonce] = useState(false)
-  const [togglingId, setTogglingId] = useState(null)
+  const [togglingId, setTogglingId]       = useState(null)
+  const [disponibiliteId, setDisponibiliteId] = useState(null)
 
   // Modals clients
   const [clientModal, setClientModal]     = useState(null) // null | 'new' | client_obj
@@ -212,6 +213,19 @@ export default function DashboardPage() {
       setError(e.message)
     } finally {
       setTogglingId(null)
+    }
+  }
+
+  async function changeDisponibilite(annonce, val) {
+    setDisponibiliteId(annonce.id)
+    try {
+      const token = await getToken()
+      await annoncesApi.update(annonce.id, { disponibilite: val }, token)
+      setData(d => ({ ...d, annonces: d.annonces.map(a => a.id === annonce.id ? { ...a, disponibilite: val } : a) }))
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setDisponibiliteId(null)
     }
   }
 
@@ -350,6 +364,20 @@ export default function DashboardPage() {
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${STATUT_COLOR[a.statut]}`}>
                         {STATUT_LABEL[a.statut]}
                       </span>
+                      <div className="mt-1.5">
+                        <select
+                          value={a.disponibilite || 'disponible'}
+                          onChange={e => changeDisponibilite(a, e.target.value)}
+                          disabled={disponibiliteId === a.id}
+                          className="text-xs border border-slate-200 rounded-lg px-1.5 py-0.5 text-slate-600 bg-white disabled:opacity-50"
+                        >
+                          <option value="disponible">Disponible</option>
+                          {a.transaction === 'location'
+                            ? <option value="loue">Loué</option>
+                            : <option value="vendu">Vendu</option>
+                          }
+                        </select>
+                      </div>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-center gap-2">
