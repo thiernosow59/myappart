@@ -11,6 +11,7 @@ import PublierPage       from './pages/PublierPage'
 import MessagesPage      from './pages/MessagesPage'
 import ComptePage        from './pages/ComptePage'
 import MesAnnoncesPage   from './pages/MesAnnoncesPage'
+import DashboardPage     from './pages/DashboardPage'
 import MentionsLegales   from './pages/MentionsLegales'
 import Confidentialite   from './pages/Confidentialite'
 import CompleterProfil   from './pages/CompleterProfil'
@@ -35,6 +36,7 @@ function AppContent() {
             <Route path="/messages"      element={<MessagesPage />} />
             <Route path="/compte"        element={<ComptePage />} />
             <Route path="/mes-annonces"     element={<MesAnnoncesPage />} />
+            <Route path="/dashboard"        element={<DashboardPage />} />
             <Route path="/mentions-legales" element={<MentionsLegales />} />
             <Route path="/confidentialite"  element={<Confidentialite />} />
             <Route path="*" element={<div className="text-center py-24 text-slate-400">Page introuvable (404)</div>} />

@@ -71,3 +71,16 @@ export const favorisApi = {
   list:   (token) => req('/favoris', { headers: { Authorization: `Bearer ${token}` } }),
   toggle: (annonce_id, token) => req('/favoris', { method: 'POST', body: JSON.stringify({ annonce_id }), headers: { Authorization: `Bearer ${token}` } }),
 }
+
+/* ── Dashboard ── */
+export const dashboardApi = {
+  get: (token) => req('/dashboard', { headers: { Authorization: `Bearer ${token}` } }),
+}
+
+/* ── Clients agence ── */
+export const clientsApi = {
+  list:   (token)              => req('/clients', { headers: { Authorization: `Bearer ${token}` } }),
+  create: (body, token)        => req('/clients', { method: 'POST', body: JSON.stringify(body), headers: { Authorization: `Bearer ${token}` } }),
+  update: (id, body, token)    => req('/clients', { method: 'PUT',  body: JSON.stringify({ id, ...body }), headers: { Authorization: `Bearer ${token}` } }),
+  delete: (id, token)          => req('/clients', { method: 'DELETE', body: JSON.stringify({ id }), headers: { Authorization: `Bearer ${token}` } }),
+}

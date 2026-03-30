@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { annoncesApi, uploadApi } from '../lib/api'
+import { annoncesApi, uploadApi, clientsApi } from '../lib/api'
 import { ImagePlus, X as XIcon } from 'lucide-react'
 
 const EQUIPEMENTS = [
@@ -24,11 +24,13 @@ export default function PublierPage() {
   const { user, profile, getToken } = useAuth()
 
   const canPublish = profile?.role === 'proprietaire' || profile?.role === 'agence'
+  const isAgence   = profile?.role === 'agence'
 
   const [loading, setLoading]   = useState(false)
   const [error, setError]       = useState('')
   const [photos, setPhotos]     = useState([]) // { file, preview, type }
   const [uploading, setUploading] = useState(false)
+  const [clients, setClients]   = useState([])
 
   const [form, setForm] = useState({
     type_bien: 'maison', transaction: 'vente',
@@ -38,7 +40,14 @@ export default function PublierPage() {
     surface_m2: '', nb_pieces: '', nb_chambres: '', nb_salles_bain: '',
     nb_etages: '', etage: '', nb_etages_total: '',
     etat: 'bon_etat', equipements: [], equipements_autres: '',
+    client_id: '',
   })
+
+  useEffect(() => {
+    if (isAgence) {
+      getToken().then(token => clientsApi.list(token).then(setClients).catch(() => {}))
+    }
+  }, [isAgence])
 
   function setF(k, v) { setForm(f => ({ ...f, [k]: v })); setError('') }
 
@@ -83,7 +92,7 @@ export default function PublierPage() {
         setUploading(false)
       }
 
-      navigate('/mes-annonces')
+      navigate('/dashboard')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -137,6 +146,23 @@ export default function PublierPage() {
           </div>
           {form.type_bien === 'terrain' && <p className="text-xs text-slate-400 mt-2">⚠️ Un terrain ne peut pas être mis en location.</p>}
         </div>
+
+        {/* Client (agence uniquement) */}
+        {isAgence && (
+          <div className="bg-white rounded-2xl p-6 shadow-sm">
+            <h2 className="font-bold text-slate-700 mb-3">Client associé <span className="text-xs font-normal text-slate-400">(visible uniquement par vous)</span></h2>
+            {clients.length === 0 ? (
+              <p className="text-sm text-slate-400">Aucun client enregistré — <a href="/dashboard" className="text-navy-900 underline">ajoutez-en un depuis le dashboard</a>.</p>
+            ) : (
+              <select className="input-field" value={form.client_id} onChange={e => setF('client_id', e.target.value)}>
+                <option value="">— Aucun client (bien propre à l'agence) —</option>
+                {clients.map(c => (
+                  <option key={c.id} value={c.id}>{c.prenom} {c.nom}{c.phone ? ` · +224 ${c.phone}` : ''}</option>
+                ))}
+              </select>
+            )}
+          </div>
+        )}
 
         {/* Titre + description */}
         <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">

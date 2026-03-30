@@ -93,20 +93,30 @@ exports.handler = async (event) => {
       if (!b.prix)      return err('Le prix est requis')
       if (!b.commune)   return err('La commune est requise')
 
+      // Vérifier que le client_id appartient bien à cette agence
+      let client_id = null
+      if (profile.role === 'agence' && b.client_id) {
+        const { rows: cRows } = await pool.query(
+          'SELECT id FROM clients_agence WHERE id = $1 AND agence_id = $2', [b.client_id, profile.id]
+        )
+        if (!cRows[0]) return err('Client introuvable', 404)
+        client_id = b.client_id
+      }
+
       const { rows } = await pool.query(`
         INSERT INTO annonces
           (profile_id, type_bien, transaction, titre, description, prix, negotiable,
            ville, commune, quartier, adresse, surface_m2,
            nb_pieces, nb_chambres, nb_salles_bain, nb_etages, etage, nb_etages_total,
-           etat, equipements, equipements_autres)
-        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21)
+           etat, equipements, equipements_autres, client_id)
+        VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22)
         RETURNING *
       `, [
         profile.id, b.type_bien, b.transaction, b.titre, b.description || null, b.prix, b.negotiable || false,
         b.ville || 'Conakry', b.commune, b.quartier || null, b.adresse || null, b.surface_m2 || null,
         b.nb_pieces || null, b.nb_chambres || null, b.nb_salles_bain || null, b.nb_etages || null,
         b.etage || null, b.nb_etages_total || null,
-        b.etat || 'bon_etat', b.equipements || [], b.equipements_autres || null,
+        b.etat || 'bon_etat', b.equipements || [], b.equipements_autres || null, client_id,
       ])
       return ok(rows[0], 201)
     }
@@ -129,7 +139,7 @@ exports.handler = async (event) => {
       let   idx     = 1
       const fields  = ['titre','description','prix','negotiable','ville','commune','quartier',
                         'surface_m2','nb_pieces','nb_chambres','nb_salles_bain','etat','equipements',
-                        'equipements_autres','statut','disponible']
+                        'equipements_autres','statut','disponible','client_id']
       fields.forEach(f => {
         if (b[f] !== undefined) { updates.push(`${f} = $${idx++}`); params.push(b[f]) }
       })

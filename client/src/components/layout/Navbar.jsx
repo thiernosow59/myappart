@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
-import { Menu, X, User, LogOut, Plus, MessageSquare, Heart } from 'lucide-react'
+import { Menu, X, User, LogOut, Plus, MessageSquare, Heart, LayoutDashboard } from 'lucide-react'
 
 export default function Navbar() {
   const { user, profile, signOut } = useAuth()
@@ -63,8 +63,8 @@ export default function Navbar() {
                     <Heart size={15} /> Favoris
                   </Link>
                   {canPublish && (
-                    <Link to="/mes-annonces" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" onClick={() => setDropdown(false)}>
-                      <Plus size={15} /> Mes annonces
+                    <Link to="/dashboard" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" onClick={() => setDropdown(false)}>
+                      <LayoutDashboard size={15} /> Dashboard
                     </Link>
                   )}
                   <hr className="my-1 border-slate-100" />
