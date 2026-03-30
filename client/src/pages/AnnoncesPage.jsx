@@ -66,7 +66,7 @@ export default function AnnoncesPage() {
   }
 
   async function toggleFavori(id) {
-    if (!user) return
+    if (!user) return navigate('/connexion')
     const token = await getToken()
     await favorisApi.toggle(id, token)
     setFavoris(prev => {
@@ -174,8 +174,8 @@ export default function AnnoncesPage() {
       {totalPages > 1 && (
         <div className="flex justify-center items-center gap-1.5 mt-10">
           <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-            className="w-9 h-9 rounded-lg flex items-center justify-center border border-slate-200 bg-white text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors">
-            <ChevronLeft size={16} />
+            className="flex items-center gap-1 px-3 h-9 rounded-lg border border-slate-200 bg-white text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors">
+            <ChevronLeft size={14} /> Précédent
           </button>
           {(() => {
             const pages = []
@@ -198,8 +198,8 @@ export default function AnnoncesPage() {
             )
           })()}
           <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages}
-            className="w-9 h-9 rounded-lg flex items-center justify-center border border-slate-200 bg-white text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors">
-            <ChevronRight size={16} />
+            className="flex items-center gap-1 px-3 h-9 rounded-lg border border-slate-200 bg-white text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 transition-colors">
+            Suivant <ChevronRight size={14} />
           </button>
         </div>
       )}

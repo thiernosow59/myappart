@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import AnnonceCard from '../components/ui/AnnonceCard'
-import { annoncesApi, statsApi } from '../lib/api'
+import { annoncesApi, statsApi, favorisApi } from '../lib/api'
+import { useAuth } from '../context/AuthContext'
 
 const QUICK_FILTERS = [
   { label: 'Tous',           params: {} },
@@ -16,7 +17,9 @@ const QUICK_FILTERS = [
 
 export default function HomePage() {
   const navigate = useNavigate()
+  const { user, getToken } = useAuth()
   const [annonces, setAnnonces]       = useState([])
+  const [favoris, setFavoris]         = useState(new Set())
   const [loading, setLoading]         = useState(true)
   const [activeFilter, setActiveFilter] = useState(0)
   const [stats, setStats]             = useState({ annonces: 0, proprietaires: 0, agences: 0 })
@@ -34,6 +37,18 @@ export default function HomePage() {
   useEffect(() => {
     statsApi.get().then(setStats).catch(() => {})
   }, [])
+
+  useEffect(() => {
+    if (!user) return
+    getToken().then(token => favorisApi.list(token).then(data => setFavoris(new Set(data.map(f => f.annonce_id)))).catch(() => {}))
+  }, [user])
+
+  async function toggleFavori(id) {
+    if (!user) return navigate('/connexion')
+    const token = await getToken()
+    await favorisApi.toggle(id, token)
+    setFavoris(prev => { const next = new Set(prev); next.has(id) ? next.delete(id) : next.add(id); return next })
+  }
 
   async function loadAnnonces(params = {}) {
     setLoading(true)
@@ -180,7 +195,7 @@ export default function HomePage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {annonces.map(a => (
-              <AnnonceCard key={a.id} annonce={a} />
+              <AnnonceCard key={a.id} annonce={a} isFav={favoris.has(a.id)} onFavToggle={toggleFavori} />
             ))}
           </div>
         )}
