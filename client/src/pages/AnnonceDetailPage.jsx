@@ -49,10 +49,10 @@ export default function AnnonceDetailPage() {
     try {
       const token = await getToken()
       // Obtenir ou créer la conversation
-      const { conversation_id } = await messagesApi.getOrCreateConversation(
+      const conv = await messagesApi.getOrCreateConversation(
         { annonce_id: id, proprietaire_id: annonce.profile_id }, token
       )
-      await messagesApi.sendMessage({ conversation_id, contenu: msgText }, token)
+      await messagesApi.sendMessage({ conversation_id: conv.id, contenu: msgText }, token)
       setMsgText('')
       setMsgSent(true)
       setTimeout(() => setMsgSent(false), 4000)
