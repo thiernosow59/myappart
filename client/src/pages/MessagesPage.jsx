@@ -4,13 +4,22 @@ import { useAuth } from '../context/AuthContext'
 import { messagesApi } from '../lib/api'
 import { Send, Check, CheckCheck } from 'lucide-react'
 
-const QUICK_REPLIES = [
+const QUICK_REPLIES_ACHETEUR = [
   'Toujours disponible ?',
   'Je suis intéressé(e)',
   'Quand puis-je visiter ?',
   'Quel est le prix final ?',
+  'Y a-t-il une négociation possible ?',
   'Merci pour l\'info',
-  'D\'accord 👍',
+]
+
+const QUICK_REPLIES_PROPRIETAIRE = [
+  'Oui, toujours disponible !',
+  'Le bien est déjà réservé',
+  'Visite possible, contactez-moi',
+  'Prix ferme, non négociable',
+  'Je vous recontacte sous 24h',
+  'D\'accord, à bientôt',
 ]
 
 function containsContact(text) {
@@ -184,7 +193,7 @@ export default function MessagesPage() {
 
               {/* Réponses rapides */}
               <div className="px-4 pt-2 flex gap-1.5 flex-wrap border-t border-slate-50">
-                {QUICK_REPLIES.map(r => (
+                {(profile?.role === 'proprietaire' || profile?.role === 'agence' ? QUICK_REPLIES_PROPRIETAIRE : QUICK_REPLIES_ACHETEUR).map(r => (
                   <button key={r} type="button"
                     onClick={() => setNewMsg(r)}
                     className="text-xs bg-slate-100 hover:bg-navy-50 hover:text-navy-900 hover:border-navy-200 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-full transition-colors">
