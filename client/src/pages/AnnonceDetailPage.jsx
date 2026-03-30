@@ -152,9 +152,22 @@ export default function AnnonceDetailPage() {
               </div>
             </div>
 
-            <div className="mt-4 text-3xl font-extrabold text-navy-900">
-              {formatPrice(annonce.prix, annonce.transaction)}
-              {annonce.negotiable && <span className="text-sm font-normal text-emerald-600 ml-2">· Négociable</span>}
+            <div className="mt-4 flex flex-wrap items-center gap-3">
+              <span className="text-3xl font-extrabold text-navy-900">
+                {formatPrice(annonce.prix, annonce.transaction)}
+              </span>
+              {annonce.negotiable && <span className="text-sm font-normal text-emerald-600">· Négociable</span>}
+              {(() => {
+                const d = annonce.disponibilite || 'disponible'
+                const cfg = {
+                  disponible: { label: '✅ Disponible',   cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+                  loue:       { label: '🔒 Loué',          cls: 'bg-orange-100 text-orange-700 border-orange-200' },
+                  vendu:      { label: '🏷️ Vendu',         cls: 'bg-red-100 text-red-700 border-red-200' },
+                }[d]
+                return cfg ? (
+                  <span className={`text-xs font-bold px-3 py-1.5 rounded-full border ${cfg.cls}`}>{cfg.label}</span>
+                ) : null
+              })()}
             </div>
 
             {/* Caractéristiques */}
