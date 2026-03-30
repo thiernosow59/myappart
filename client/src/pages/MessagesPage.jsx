@@ -16,7 +16,7 @@ const QUICK_REPLIES_ACHETEUR = [
 const QUICK_REPLIES_PROPRIETAIRE = [
   'Oui, toujours disponible !',
   'Le bien est déjà réservé',
-  'Visite possible, contactez-moi',
+  'Visite possible, proposez une date',
   'Prix ferme, non négociable',
   'Je vous recontacte sous 24h',
   'D\'accord, à bientôt',
