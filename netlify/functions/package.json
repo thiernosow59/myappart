@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
     "@supabase/supabase-js": "^2.47.0",
-    "pg": "^8.13.0"
+    "ws": "^8.19.0"
   }
 }
