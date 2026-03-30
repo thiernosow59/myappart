@@ -62,6 +62,15 @@ exports.handler = async (event) => {
         return ok(rows)
       }
 
+      // Nombre total de messages non lus
+      if (q.action === 'unread_count') {
+        const { rows } = await pool.query(
+          'SELECT COUNT(*) AS total FROM messages m JOIN conversations c ON c.id = m.conversation_id WHERE (c.utilisateur_id = $1 OR c.proprietaire_id = $1) AND m.sender_id != $1 AND m.lu = false',
+          [profileId]
+        )
+        return ok({ count: parseInt(rows[0].total) })
+      }
+
       return err('action non reconnue')
     }
 

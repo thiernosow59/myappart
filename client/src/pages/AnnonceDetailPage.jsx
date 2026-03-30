@@ -4,6 +4,21 @@ import { Heart, MessageSquare, Share2, ChevronLeft, CheckCircle } from 'lucide-r
 import { annoncesApi, messagesApi, favorisApi } from '../lib/api'
 import { useAuth } from '../context/AuthContext'
 
+const QUICK_REPLIES_VENTE = [
+  'Bonjour, ce bien est-il toujours disponible ?',
+  'Quel est le prix final ?',
+  'Une visite est-elle possible ?',
+  'Y a-t-il une possibilité de négociation ?',
+  'Quels sont les documents requis ?',
+]
+const QUICK_REPLIES_LOCATION = [
+  'Bonjour, ce bien est-il toujours disponible ?',
+  'Quel est le loyer final charges comprises ?',
+  'Une visite est-elle possible ?',
+  'Quelle est la durée minimale de location ?',
+  'Y a-t-il une caution à prévoir ?',
+]
+
 const EQUIP_LABELS = {
   eau_courante: '💧 Eau courante', electricite: '⚡ Électricité', cloture: '🔒 Clôture',
   parking: '🚗 Parking', piscine: '🏊 Piscine', gardien: '👮 Gardien',
@@ -213,11 +228,21 @@ export default function AnnonceDetailPage() {
               </div>
             ) : (
               <form onSubmit={sendMessage} className="space-y-3">
+                {/* Réponses rapides */}
+                <div className="flex flex-wrap gap-1.5">
+                  {(annonce.transaction === 'location' ? QUICK_REPLIES_LOCATION : QUICK_REPLIES_VENTE).map(r => (
+                    <button key={r} type="button"
+                      onClick={() => setMsgText(r)}
+                      className="text-xs bg-slate-100 hover:bg-navy-50 hover:text-navy-900 hover:border-navy-200 border border-slate-200 text-slate-600 px-2.5 py-1 rounded-full transition-colors">
+                      {r}
+                    </button>
+                  ))}
+                </div>
                 <textarea
                   value={msgText}
                   onChange={e => setMsgText(e.target.value)}
                   placeholder="Bonjour, je suis intéressé par ce bien..."
-                  rows={4}
+                  rows={3}
                   className="input-field resize-none"
                   disabled={sending}
                 />

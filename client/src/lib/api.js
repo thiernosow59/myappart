@@ -35,6 +35,8 @@ export const messagesApi = {
     req(`/messages?action=get_messages&conversation_id=${convId}`, { headers: { Authorization: `Bearer ${token}` } }),
   sendMessage: (body, token) =>
     req('/messages', { method: 'POST', body: JSON.stringify({ action: 'send_message', ...body }), headers: { Authorization: `Bearer ${token}` } }),
+  getUnreadCount: (token) =>
+    req('/messages?action=unread_count', { headers: { Authorization: `Bearer ${token}` } }),
 }
 
 /* ── Upload photos ── */

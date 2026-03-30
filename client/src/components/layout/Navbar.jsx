@@ -1,13 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
+import { messagesApi } from '../../lib/api'
 import { Menu, X, User, LogOut, Plus, MessageSquare, Heart, LayoutDashboard } from 'lucide-react'
 
 export default function Navbar() {
-  const { user, profile, signOut } = useAuth()
+  const { user, profile, signOut, getToken } = useAuth()
   const navigate  = useNavigate()
-  const [open, setOpen]       = useState(false)
-  const [dropdown, setDropdown] = useState(false)
+  const [open, setOpen]           = useState(false)
+  const [dropdown, setDropdown]   = useState(false)
+  const [unreadCount, setUnreadCount] = useState(0)
+  const pollRef = useRef(null)
+
+  useEffect(() => {
+    if (!user) { setUnreadCount(0); return }
+    async function fetchUnread() {
+      try {
+        const token = await getToken()
+        const data  = await messagesApi.getUnreadCount(token)
+        setUnreadCount(data.count || 0)
+      } catch (_) {}
+    }
+    fetchUnread()
+    clearInterval(pollRef.current)
+    pollRef.current = setInterval(fetchUnread, 30000)
+    return () => clearInterval(pollRef.current)
+  }, [user])
 
   const canPublish = profile?.role === 'proprietaire' || profile?.role === 'agence'
 
@@ -40,6 +58,14 @@ export default function Navbar() {
               <Plus size={15} /> Publier
             </Link>
           )}
+          {user && unreadCount > 0 && (
+            <Link to="/messages" className="relative p-2 text-slate-500 hover:text-navy-900 transition-colors">
+              <MessageSquare size={20} />
+              <span className="absolute top-0.5 right-0.5 bg-red-500 text-white text-[9px] font-bold min-w-[14px] h-3.5 px-0.5 rounded-full flex items-center justify-center">
+                {unreadCount > 99 ? '99+' : unreadCount}
+              </span>
+            </Link>
+          )}
           {user ? (
             <div className="relative">
               <button
@@ -58,6 +84,11 @@ export default function Navbar() {
                   </Link>
                   <Link to="/messages" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" onClick={() => setDropdown(false)}>
                     <MessageSquare size={15} /> Messages
+                    {unreadCount > 0 && (
+                      <span className="ml-auto bg-red-500 text-white text-[10px] font-bold min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center">
+                        {unreadCount > 99 ? '99+' : unreadCount}
+                      </span>
+                    )}
                   </Link>
                   <Link to="/favoris" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50" onClick={() => setDropdown(false)}>
                     <Heart size={15} /> Favoris
